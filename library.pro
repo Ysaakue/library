@@ -1,4 +1,4 @@
-QT += quick
+QT += quick core sql
 
 CONFIG += c++11
 
@@ -6,8 +6,12 @@ CONFIG += c++11
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+HEADERS += \
+    $$PWD/models/*.h
+
 SOURCES += \
-        main.cpp
+    $$PWD/models/*.cpp \
+    main.cpp
 
 RESOURCES += qml.qrc
 
