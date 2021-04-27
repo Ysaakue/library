@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file>pages/utilities/Divider.qml</file>
+        <file>pages/main.qml</file>
+        <file>pages/utilities/MyButton.qml</file>
+        <file>pages/images/edit_black_24dp.svg</file>
+        <file>pages/images/delete_black_24dp.svg</file>
     </qresource>
 </RCC>
