@@ -8,27 +8,22 @@ import DatabaseController 1.0
 
 import "utilities"
 
-ApplicationWindow {
-    id: page
-    title: qsTr("Master Library")
-    width: 700
-    height: 480
-    visible: true
-
+Rectangle {
     property string current_model: "book"
+
+    function getName(modelData){
+        if(current_model == "book" && modelData["name"])
+            return modelData["name"];
+        else if(current_model == "category" && modelData["description"])
+            return modelData["description"];
+        return "";
+    }
 
     DatabaseController{
         id: global_database_controller
     }
 
-    Rectangle {
-        id: background
-        anchors.fill: parent
-        gradient: Gradient {
-            GradientStop { position: 0; color: "#929292" }
-            GradientStop { position: 1; color: "#151515" }
-        }
-    }
+    Background{id: background}
 
     Grid{
         id: search_box
@@ -52,16 +47,29 @@ ApplicationWindow {
         }
 
         Button{
-            text: "teste1"
-            height: search_text.height
+            text: "search"
+            height: 25
             width: 25
             onClicked: console.log(search_text.text)
+            Image{
+                z:1
+                anchors.fill: parent
+                source: "qrc:/pages/images/search_black_24dp.svg"
+            }
         }
 
         Button{
             text: current_model == "book"? "Adicionar Livro" : "Adicionar Categoria"
             font.pointSize: 14
             height: 25
+            onClicked: {
+                if(current_model == "book"){
+                    //
+                }
+                else{
+
+                }
+            }
         }
 
         Button{
@@ -91,6 +99,7 @@ ApplicationWindow {
         anchors.horizontalCenter: parent.horizontalCenter
         model: global_database_controller.getAllBooks()
         interactive: true
+        clip: true
         delegate: Rectangle{
             height: 30
             width: parent.width
@@ -124,13 +133,5 @@ ApplicationWindow {
                 imageSource: "qrc:/pages/images/delete_black_24dp.svg"
             }
         }
-    }
-
-    function getName(modelData){
-        if(current_model == "book" && modelData["name"])
-            return modelData["name"];
-        else if(current_model == "category" && modelData["description"])
-            return modelData["description"];
-        return "";
     }
 }

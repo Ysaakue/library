@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<library::controllers::DatabaseController>("DatabaseController",1,0,"DatabaseController");
 
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/pages/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
