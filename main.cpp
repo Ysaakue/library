@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include "controllers/database_controller.h"
 
 int main(int argc, char *argv[])
 {
@@ -8,6 +9,8 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
+
+    qmlRegisterType<library::controllers::DatabaseController>("DatabaseController",1,0,"DatabaseController");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/pages/main.qml"));

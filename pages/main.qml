@@ -4,15 +4,22 @@ import QtQuick.Window 2.15
 import QtQuick.Controls.Material 2.12
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
+import DatabaseController 1.0
 
 import "utilities"
 
 ApplicationWindow {
     id: page
+    title: qsTr("Master Library")
     width: 700
     height: 480
     visible: true
-    title: qsTr("Master Library")
+
+    property string current_model: "book"
+
+    DatabaseController{
+        id: global_database_controller
+    }
 
     Rectangle {
         id: background
@@ -52,15 +59,25 @@ ApplicationWindow {
         }
 
         Button{
-            text: "adicionar categoria"
+            text: current_model == "book"? "Adicionar Livro" : "Adicionar Categoria"
             font.pointSize: 14
             height: 25
         }
 
         Button{
-            text: "adicionar livro"
+            text: current_model == "book"? "Lista de Categorias" : "Lista de Livros"
             font.pointSize: 14
             height: 25
+            onClicked: {
+                if(current_model == "book"){
+                    current_model = "category"
+                    list.model = global_database_controller.getAllCategories()
+                }
+                else{
+                    current_model = "book"
+                    list.model = global_database_controller.getAllBooks()
+                }
+            }
         }
     }
 
@@ -72,7 +89,7 @@ ApplicationWindow {
         anchors.bottomMargin: 20
         width: search_box.width
         anchors.horizontalCenter: parent.horizontalCenter
-        model: ["Harry Porter","Percy Jackson","Guia Suno Dividendos"]
+        model: global_database_controller.getAllBooks()
         interactive: true
         delegate: Rectangle{
             height: 30
@@ -81,7 +98,7 @@ ApplicationWindow {
             color: "white"
 
             Text{
-                text: modelData
+                text: getName(modelData)
                 color: "black"
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
@@ -107,5 +124,13 @@ ApplicationWindow {
                 imageSource: "qrc:/pages/images/delete_black_24dp.svg"
             }
         }
+    }
+
+    function getName(modelData){
+        if(current_model == "book" && modelData["name"])
+            return modelData["name"];
+        else if(current_model == "category" && modelData["description"])
+            return modelData["description"];
+        return "";
     }
 }

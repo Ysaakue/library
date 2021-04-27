@@ -262,3 +262,55 @@ bool Book::destroy(){
         return false;
     }
 };
+
+/**
+ * @brief Book::getAll
+ * @return
+ */
+QVariantList Book::getAll(){
+    Book::_init();
+    if(!Database::database.open()) {
+        qDebug() << "ERROR: trying to open the database";
+        throw "ERROR: trying to open the database";
+    }
+
+    QSqlQuery query(Database::database);
+
+    QString sqlStatement = "select * from books;";
+
+    if(Database::database.isValid() && Database::database.isOpen()){
+        if (!query.prepare(sqlStatement)){
+            Database::database.close();
+            qDebug() << "ERROR: Query not prepared";
+            throw "ERROR: Query not prepared";
+        }
+    } else {
+        qDebug() << "ERROR: Invalid or closed (preparation)";
+        throw "ERROR: Invalid or closed (preparation)";
+    }
+
+    if(Database::database.isValid() && Database::database.isOpen()){
+        if(!query.exec()){
+            qDebug() << query.lastError().text();
+            Database::database.close();
+            throw "ERROR: Query not executed";
+        }
+    } else {
+        qDebug() << "ERROR: Invalid or closed (execution)";
+        throw "ERROR: Invalid or closed (execution)";
+    }
+
+    QVariantList books;
+    while(query.next()){
+        QVariantMap bookMap;
+        bookMap.insert("isbn", query.value(0).toString());
+        bookMap.insert("name", query.value(1).toString());
+        bookMap.insert("author", query.value(2).toString());
+        bookMap.insert("category_id", query.value(4).toInt());
+
+        books.append(bookMap);
+    }
+    Database::database.close();
+
+    return books;
+}

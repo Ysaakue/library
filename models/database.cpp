@@ -15,8 +15,12 @@ Database::Database(){
  * @brief Set database file path and create the tables
  */
 void Database::_init(){
-   database.setDatabaseName("/tmp/library.sqlite");
+    if(!initiated){
+        Database::database.setDatabaseName("/tmp/library.sqlite");
+        Database::initiated = true;
 
-   Book::createTable();
-   Category::createTable();
+        Book::createTable();
+        Category::createTable();
+
+    }
 }

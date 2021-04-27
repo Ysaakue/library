@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <qdebug.h>
+#include <QVariantList>
 #include "database.h"
 
 namespace library{
@@ -32,6 +33,9 @@ public:
     bool save();
     bool update();
     bool destroy();
+
+    // Get records from database
+    static QVariantList getAll();
 };}}
 
 #endif // CATEGORY_H

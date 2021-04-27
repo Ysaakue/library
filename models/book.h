@@ -36,6 +36,9 @@ public:
     bool save();
     bool update();
     bool destroy();
+
+    // Get records from database
+    static QVariantList getAll();
 };}}
 
 #endif // BOOK_H
