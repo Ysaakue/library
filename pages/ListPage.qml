@@ -4,7 +4,6 @@ import QtQuick.Window 2.15
 import QtQuick.Controls.Material 2.12
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
-import DatabaseController 1.0
 
 import "utilities"
 
@@ -17,10 +16,6 @@ Rectangle {
         else if(current_model == "category" && modelData["description"])
             return modelData["description"];
         return "";
-    }
-
-    DatabaseController{
-        id: global_database_controller
     }
 
     Background{id: background}
@@ -63,9 +58,8 @@ Rectangle {
             font.pointSize: 14
             height: 25
             onClicked: {
-                if(current_model == "book"){
-                    //
-                }
+                if(current_model == "book")
+                    pageRoute.push("qrc:/pages/BookForm.qml")
                 else{
 
                 }
@@ -131,6 +125,14 @@ Rectangle {
                 buttonWidth: 24; buttonHeight: 24
                 anchors.verticalCenter: parent.verticalCenter
                 imageSource: "qrc:/pages/images/delete_black_24dp.svg"
+            }
+        }
+
+        Connections{
+            target: global_database_controller
+
+            function onBookAdded(){
+                list.model = global_database_controller.getAllBooks()
             }
         }
     }

@@ -36,6 +36,8 @@ public:
 
     // Get records from database
     static QVariantList getAll();
+    static QStringList getAllDescriptions();
+    static Category* getByDescription(QString description);
 };}}
 
 #endif // CATEGORY_H

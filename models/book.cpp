@@ -2,9 +2,27 @@
 
 using namespace library::models;
 
+/**
+ * @brief Init the database and set default values to class attributes
+ */
 Book::Book(){
     Book::_init();
     this->isbn = "";
+}
+
+/**
+ * @brief Init the database and set the attributes from params
+ * @param isbn Code that identifies  the book
+ * @param name The books's name
+ * @param author The book's author's name
+ * @param category_id The category's id
+ */
+Book::Book(QString isbn, QString name, QString author, int category_id){
+    Book::_init();
+    this->isbn = isbn;
+    this->name = name;
+    this->author = author;
+    this->category_id = category_id;
 }
 
 /**
@@ -264,8 +282,8 @@ bool Book::destroy(){
 };
 
 /**
- * @brief Book::getAll
- * @return
+ * @brief Get all records from database
+ * @return Books as QVariantMap
  */
 QVariantList Book::getAll(){
     Book::_init();

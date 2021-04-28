@@ -11,6 +11,9 @@ class DatabaseController : public QObject{
 public:
     DatabaseController();
     Q_INVOKABLE QVariantList getAllCategories();
+    Q_INVOKABLE QStringList getAllCategoriesDescriptions();
+
+    Q_INVOKABLE bool saveBook(QString isnb,QString name,QString author, QString category_description);
 
     Q_INVOKABLE QVariantList getAllBooks();
 

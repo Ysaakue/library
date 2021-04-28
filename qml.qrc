@@ -8,5 +8,6 @@
         <file>pages/utilities/Background.qml</file>
         <file>main.qml</file>
         <file>pages/images/search_black_24dp.svg</file>
+        <file>pages/BookForm.qml</file>
     </qresource>
 </RCC>

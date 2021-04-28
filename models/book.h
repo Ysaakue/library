@@ -16,6 +16,7 @@ private:
 
 public:
     Book();
+    Book(QString isbn, QString name, QString author, int category);
 
     // Getters
     QString getName(){ return this->name; }
