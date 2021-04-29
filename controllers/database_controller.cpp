@@ -48,6 +48,26 @@ bool DatabaseController::saveBook(QString isbn,QString name,QString author, QStr
 }
 
 /**
+ * @brief Update the Book find by isbn with the attributes received by params and emit the bookUpdated signal if book was updated
+ * @param isbn Code that identifies  the book
+ * @param name The books's name
+ * @param author The book's author's name
+ * @param category_description The Category's description
+ * @return true if success and false if an error occurred
+ */
+bool DatabaseController::updateBook(QString isbn,QString name,QString author, QString category_description){
+    Book* book = Book::getByIsbn(isbn);
+    qDebug() << name;
+    book->setName(name);
+    book->setAuthor(author);
+    book->setCategory(Category::getByDescription(category_description)->getId());
+    if(!book->update())
+        return false;
+    emit bookUpdated(book->toVariantMap());
+    return true;
+}
+
+/**
  * @brief Get the book by isbn received as params and emit the signal bookDeleted if the book was deleted
  * @param isbn The isbn of book to delete
  * @return true if success and false if an error occurred

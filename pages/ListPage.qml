@@ -109,6 +109,10 @@ Rectangle {
                     row.height = 0
                     row.visible = false
                 }
+
+                onBookUpdated: function(bookInformation) {
+                    modelData = bookInformation
+                }
             }
 
             Text{
@@ -128,6 +132,18 @@ Rectangle {
                 buttonWidth: 24; buttonHeight: 24
                 anchors.verticalCenter: parent.verticalCenter
                 imageSource: "qrc:/pages/images/edit_black_24dp.svg"
+                button.onClicked: {
+                    if(current_model == "book")
+                        pageRoute.push("qrc:/pages/BookForm.qml",{
+                            'databaseInstance': database_controller_row,
+                            'action': "update",
+                            'isbn': modelData["isbn"],
+                            'name': modelData["name"],
+                            'author': modelData["author"],
+                            'category_description': modelData["category_description"]
+                            }
+                        )
+                }
             }
             MyButton {
                 id: delete_

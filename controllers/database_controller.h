@@ -14,6 +14,7 @@ public:
     Q_INVOKABLE QStringList getAllCategoriesDescriptions();
 
     Q_INVOKABLE bool saveBook(QString isbn,QString name,QString author, QString category_description);
+    Q_INVOKABLE bool updateBook(QString isbn,QString name,QString author, QString category_description);
     Q_INVOKABLE bool destroyBook(QString isbn);
 
     Q_INVOKABLE QVariantList getAllBooks();

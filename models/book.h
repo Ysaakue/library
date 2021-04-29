@@ -18,6 +18,8 @@ public:
     Book();
     Book(QString isbn, QString name, QString author, int category);
 
+    QVariantMap toVariantMap();
+
     // Getters
     QString getName(){ return this->name; }
     QString getAuthor(){ return this->author; }

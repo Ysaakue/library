@@ -4,7 +4,14 @@ import QtQuick.Controls 1.4
 import "utilities"
 
 Rectangle {
+    id: page
+    property string action: "save"
     property var databaseInstance: global_database_controller
+
+    property string isbn: ""
+    property string name: ""
+    property string author: ""
+    property string category_description: ""
 
     Background{id:background}
 
@@ -31,6 +38,7 @@ Rectangle {
             z: 1
             TextInput{
                 id: isbn
+                text: page.isbn
                 width: parent.width
                 height: 22
                 anchors.left: parent.left
@@ -49,6 +57,7 @@ Rectangle {
             height: 25
             TextInput{
                 id: name
+                text: page.name
                 width: parent.width
                 anchors.left: parent.left
                 anchors.leftMargin: 5
@@ -66,6 +75,7 @@ Rectangle {
             height: 25
             TextInput{
                 id: author
+                text: page.author
                 width: parent.width
                 anchors.left: parent.left
                 anchors.leftMargin: 5
@@ -82,6 +92,11 @@ Rectangle {
             width: 300
             height: 25
             model: databaseInstance.getAllCategoriesDescriptions()
+
+            Component.onCompleted: {
+                if(category_description != "")
+                    category.currentIndex = category.find(category_description)
+            }
         }
     }
 
@@ -93,11 +108,18 @@ Rectangle {
         anchors.leftMargin: 15
         text: "Salvar"
         onClicked: {
-            if(databaseInstance.saveBook(isbn.text,name.text,author.text,category.currentText)){
-                console.log("ok")
-            } else {
-                console.log("fail")
-            }
+            if(action === "save")
+                if(databaseInstance.saveBook(isbn.text,name.text,author.text,category.currentText)){
+                    console.log("ok")
+                } else {
+                    console.log("fail")
+                }
+            else
+                if(databaseInstance.updateBook(isbn.text,name.text,author.text,category.currentText)){
+                    console.log("ok")
+                } else {
+                    console.log("fail")
+                }
         }
     }
 

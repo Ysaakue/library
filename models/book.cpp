@@ -26,6 +26,20 @@ Book::Book(QString isbn, QString name, QString author, int category_id){
 }
 
 /**
+ * @brief Create a VariantMap from Book's attributes
+ * @return return the VariantMap created
+ */
+QVariantMap Book::toVariantMap(){
+    QVariantMap bookMap;
+    bookMap.insert("isbn", this->isbn);
+    bookMap.insert("name", this->name);
+    bookMap.insert("author", this->author);
+    bookMap.insert("category_id", this->category_id);
+
+    return bookMap;
+}
+
+/**
  * @brief Create database table
  * @return true if success and false if an error occurred
  */
@@ -196,7 +210,7 @@ bool Book::update(){
 
     QSqlQuery query(Database::database);
 
-    QString sqlStatement = "update books set isbn=:isbn, name=:name, author=:author, category_id=:category_id where id=:id;";
+    QString sqlStatement = "update books set name=:name, author=:author, category_id=:category_id where isbn=:isbn;";
 
     if(Database::database.isValid() && Database::database.isOpen()){
         if (!query.prepare(sqlStatement)){
@@ -294,7 +308,7 @@ QVariantList Book::getAll(){
 
     QSqlQuery query(Database::database);
 
-    QString sqlStatement = "select * from books;";
+    QString sqlStatement = "select books.isbn,books.name,books.author,categories.description from books join categories on books.category_id = categories.id;";
 
     if(Database::database.isValid() && Database::database.isOpen()){
         if (!query.prepare(sqlStatement)){
@@ -324,7 +338,7 @@ QVariantList Book::getAll(){
         bookMap.insert("isbn", query.value(0).toString());
         bookMap.insert("name", query.value(1).toString());
         bookMap.insert("author", query.value(2).toString());
-        bookMap.insert("category_id", query.value(4).toInt());
+        bookMap.insert("category_description", query.value(3).toString());
 
         books.append(bookMap);
     }
