@@ -31,6 +31,10 @@ QVariantList DatabaseController::getAllBooks(){
     return Book::getAll();
 }
 
+QVariantList DatabaseController::filterBook(QString filter){
+    return Book::getFiltered(filter);
+}
+
 /**
  * @brief Create a book with the attributes received as params and emit the signal bookAdded if
  * book was saved

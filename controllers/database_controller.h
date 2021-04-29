@@ -18,6 +18,7 @@ public:
     Q_INVOKABLE bool destroyBook(QString isbn);
 
     Q_INVOKABLE QVariantList getAllBooks();
+    Q_INVOKABLE QVariantList filterBook(QString filter);
 
 signals:
     void categoryUpdated(QVariantMap);

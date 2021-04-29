@@ -9,7 +9,7 @@ import DatabaseController 1.0
 import "utilities"
 
 Rectangle {
-    property string current_model: "book"
+    property string current_model: "book" //TODO category crud
 
     function getName(modelData){
         if(current_model == "book" && modelData["name"])
@@ -46,7 +46,7 @@ Rectangle {
             text: "search"
             height: 25
             width: 25
-            onClicked: console.log(search_text.text)
+            onClicked: list.model = global_database_controller.filterBook(search_text.text)
             Image{
                 z:1
                 anchors.fill: parent
@@ -67,21 +67,21 @@ Rectangle {
             }
         }
 
-        Button{
-            text: current_model == "book"? "Lista de Categorias" : "Lista de Livros"
-            font.pointSize: 14
-            height: 25
-            onClicked: {
-                if(current_model == "book"){
-                    current_model = "category"
-                    list.model = global_database_controller.getAllCategories()
-                }
-                else{
-                    current_model = "book"
-                    list.model = global_database_controller.getAllBooks()
-                }
-            }
-        }
+//        Button{
+//            text: current_model == "book"? "Lista de Categorias" : "Lista de Livros"
+//            font.pointSize: 14
+//            height: 25
+//            onClicked: {
+//                if(current_model == "book"){
+//                    current_model = "category"
+//                    list.model = global_database_controller.getAllCategories()
+//                }
+//                else{
+//                    current_model = "book"
+//                    list.model = global_database_controller.getAllBooks()
+//                }
+//            }
+//        }
     }
 
     ListView{

@@ -403,3 +403,60 @@ Book* Book::getByIsbn(QString isbn){
 
     return new Book(_isbn,_name,_author,_category);
 }
+
+/**
+ * @brief Searches the database for a Book where author, name or category's description mathes the keyword received
+ * @param filter The keyword to the search
+ * @return The records wich habe matched
+ */
+QVariantList Book::getFiltered(QString filter){
+    Book::_init();
+    if(!Database::database.open()) {
+        qDebug() << "ERROR: trying to open the database";
+        return QVariantList();
+    }
+
+    QSqlQuery query(Database::database);
+
+    QString sqlStatement =  "select books.isbn,books.name,books.author,categories.description from books join "
+                            "categories on books.category_id = categories.id where books.author like :filter "
+                            "or books.name like :filter or categories.description like :filter;";
+
+    if(Database::database.isValid() && Database::database.isOpen()){
+        if (!query.prepare(sqlStatement)){
+            Database::database.close();
+            qDebug() << "ERROR: Query not prepared";
+            return QVariantList();
+        }
+    } else {
+        qDebug() << "ERROR: Invalid or closed (preparation)";
+        return QVariantList();
+    }
+
+    query.bindValue(":filter", QString("%%1%").arg(filter));
+
+    if(Database::database.isValid() && Database::database.isOpen()){
+        if(!query.exec()){
+            qDebug() << query.lastError().text();
+            Database::database.close();
+            return QVariantList();
+        }
+    } else {
+        qDebug() << "ERROR: Invalid or closed (execution)";
+        return QVariantList();
+    }
+
+    QVariantList books;
+    while(query.next()){
+        QVariantMap bookMap;
+        bookMap.insert("isbn", query.value(0).toString());
+        bookMap.insert("name", query.value(1).toString());
+        bookMap.insert("author", query.value(2).toString());
+        bookMap.insert("category_description", query.value(3).toString());
+
+        books.append(bookMap);
+    }
+    Database::database.close();
+
+    return books;
+}

@@ -102,6 +102,7 @@ Rectangle {
     }
 
     Dialog {
+        // TODO improve dialogs
         id: dialog
         anchors.centerIn: parent.Center
         title: ""
@@ -130,7 +131,7 @@ Rectangle {
         text: "Salvar"
         onClicked: {
             if(isbn.text != "" && name.text != "" && author.text!= "")
-                if(action === "save")
+                if(page.action === "save")
                     if(databaseInstance.saveBook(isbn.text,name.text,author.text,category.currentText)){
                         dialog.title = "Livro salvo com sucesso"
                         dialog.pop = true

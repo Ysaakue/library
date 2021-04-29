@@ -44,6 +44,7 @@ public:
 
     // Get records from database
     static QVariantList getAll();
+    static QVariantList getFiltered(QString filter);
     static Book* getByIsbn(QString isbn);
 };}}
 
