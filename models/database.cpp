@@ -22,5 +22,14 @@ void Database::_init(){
         Book::createTable();
         Category::createTable();
 
+        // add default categories
+        if(Category::getAll().size() == 0){
+            Category("Drama").save();
+            Category("Conto").save();
+            Category("Crônica").save();
+            Category("Ensaio").save();
+            Category("Poesia").save();
+            Category("Carta").save();
+        }
     }
 }

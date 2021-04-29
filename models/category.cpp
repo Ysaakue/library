@@ -12,6 +12,16 @@ Category::Category(){
 
 /**
  * @brief Init the database and set the attributes from params
+ * @param description The Category's description
+ */
+Category::Category(QString description){
+    Category::_init();
+    this->id = 0;
+    this->description = description;
+}
+
+/**
+ * @brief Init the database and set the attributes from params
  * @param id The Category's identifier
  * @param description The Category's description
  */
