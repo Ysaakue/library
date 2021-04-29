@@ -289,7 +289,7 @@ QVariantList Book::getAll(){
     Book::_init();
     if(!Database::database.open()) {
         qDebug() << "ERROR: trying to open the database";
-        throw "ERROR: trying to open the database";
+        return QVariantList();
     }
 
     QSqlQuery query(Database::database);
@@ -300,22 +300,22 @@ QVariantList Book::getAll(){
         if (!query.prepare(sqlStatement)){
             Database::database.close();
             qDebug() << "ERROR: Query not prepared";
-            throw "ERROR: Query not prepared";
+            return QVariantList();
         }
     } else {
         qDebug() << "ERROR: Invalid or closed (preparation)";
-        throw "ERROR: Invalid or closed (preparation)";
+        return QVariantList();
     }
 
     if(Database::database.isValid() && Database::database.isOpen()){
         if(!query.exec()){
             qDebug() << query.lastError().text();
             Database::database.close();
-            throw "ERROR: Query not executed";
+            return QVariantList();
         }
     } else {
         qDebug() << "ERROR: Invalid or closed (execution)";
-        throw "ERROR: Invalid or closed (execution)";
+        return QVariantList();
     }
 
     QVariantList books;
@@ -331,4 +331,61 @@ QVariantList Book::getAll(){
     Database::database.close();
 
     return books;
+}
+
+/**
+ * @brief Get a Book filtred by isbn
+ * @param isbn The Book's isbn
+ * @return The Book filtred by isbn if was found and null if a error or the Book was not found
+ */
+Book* Book::getByIsbn(QString isbn){
+    Book::_init();
+    if(!Database::database.open()) {
+        qDebug() << "ERROR: trying to open the database";
+        return NULL;
+    }
+
+    QSqlQuery query(Database::database);
+
+    QString sqlStatement = "select * from books where isbn = :isbn;";
+
+    if(Database::database.isValid() && Database::database.isOpen()){
+        if (!query.prepare(sqlStatement)){
+            Database::database.close();
+            qDebug() << "ERROR: Query not prepared";
+            return NULL;
+        }
+    } else {
+        qDebug() << "ERROR: Invalid or closed (preparation)";
+        return NULL;
+    }
+
+    query.bindValue(":isbn", QVariant(isbn));
+
+    if(Database::database.isValid() && Database::database.isOpen()){
+        if(!query.exec()){
+            qDebug() << query.lastError().text();
+            Database::database.close();
+            return NULL;
+        }
+    } else {
+        qDebug() << "ERROR: Invalid or closed (execution)";
+        return NULL;
+    }
+
+    QString _isbn;
+    QString _name;
+    QString _author;
+    int _category = 0;
+    while(query.next()){
+        _isbn = query.value(0).toString();
+        _name = query.value(1).toString();
+        _author = query.value(2).toString();
+        _category = query.value(3).toInt();
+    }
+    Database::database.close();
+
+    if(_isbn == "")return NULL;
+
+    return new Book(_isbn,_name,_author,_category);
 }

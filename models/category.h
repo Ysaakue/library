@@ -15,6 +15,7 @@ private:
 
 public:
     Category();
+    Category(int id,QString description);
 
     // Getters
     int getId(){ return this->id; }

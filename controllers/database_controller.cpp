@@ -40,9 +40,21 @@ QVariantList DatabaseController::getAllBooks(){
  * @param category_description The Category's description
  * @return true if success and false if an error occurred
  */
-bool DatabaseController::saveBook(QString isnb,QString name,QString author, QString category_description){
-    if(!Book(isnb,name,author,Category::getByDescription(category_description)->getId()).save())
+bool DatabaseController::saveBook(QString isbn,QString name,QString author, QString category_description){
+    if(!Book(isbn,name,author,Category::getByDescription(category_description)->getId()).save())
         return false;
     emit bookAdded();
+    return true;
+}
+
+/**
+ * @brief Get the book by isbn received as params and emit the signal bookDeleted if the book was deleted
+ * @param isbn The isbn of book to delete
+ * @return true if success and false if an error occurred
+ */
+bool DatabaseController::destroyBook(QString isbn){
+    if(!Book::getByIsbn(isbn)->destroy())
+        return false;
+    emit bookDeleted();
     return true;
 }

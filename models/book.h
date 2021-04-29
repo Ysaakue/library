@@ -22,11 +22,13 @@ public:
     QString getName(){ return this->name; }
     QString getAuthor(){ return this->author; }
     QString getIsbn(){ return this->isbn; }
+    int getCategoryId(){ return this->category_id; }
 
     // Setter
     void setName(QString name){ this->name = name; }
     void setAuthor(QString author){ this->author= author; }
     void setIsbn(QString isbn){ this->isbn= isbn; }
+    void setCategory(int category_id){ this->category_id = category_id; }
 
     // Manage database table
     static bool createTable();
@@ -40,6 +42,7 @@ public:
 
     // Get records from database
     static QVariantList getAll();
+    static Book* getByIsbn(QString isbn);
 };}}
 
 #endif // BOOK_H

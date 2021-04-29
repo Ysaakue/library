@@ -11,6 +11,17 @@ Category::Category(){
 }
 
 /**
+ * @brief Init the database and set the attributes from params
+ * @param id The Category's identifier
+ * @param description The Category's description
+ */
+Category::Category(int id, QString description){
+    Category::_init();
+    this->id = id;
+    this->description = description;
+}
+
+/**
  * @brief Create database table
  * @return true if success and false if an error occurred
  */
@@ -271,7 +282,7 @@ QVariantList Category::getAll(){
     Category::_init();
     if(!Database::database.open()) {
         qDebug() << "ERROR: trying to open the database";
-        throw "ERROR: trying to open the database";
+        return QVariantList();
     }
 
     QSqlQuery query(Database::database);
@@ -282,22 +293,22 @@ QVariantList Category::getAll(){
         if (!query.prepare(sqlStatement)){
             Database::database.close();
             qDebug() << "ERROR: Query not prepared";
-            throw "ERROR: Query not prepared";
+            return QVariantList();
         }
     } else {
         qDebug() << "ERROR: Invalid or closed (preparation)";
-        throw "ERROR: Invalid or closed (preparation)";
+        return QVariantList();
     }
 
     if(Database::database.isValid() && Database::database.isOpen()){
         if(!query.exec()){
             qDebug() << query.lastError().text();
             Database::database.close();
-            throw "ERROR: Query not executed";
+            return QVariantList();
         }
     } else {
         qDebug() << "ERROR: Invalid or closed (execution)";
-        throw "ERROR: Invalid or closed (execution)";
+        return QVariantList();
     }
 
     QVariantList categories;
@@ -321,7 +332,7 @@ QStringList Category::getAllDescriptions(){
     Category::_init();
     if(!Database::database.open()) {
         qDebug() << "ERROR: trying to open the database";
-        throw "ERROR: trying to open the database";
+        return QStringList();
     }
 
     QSqlQuery query(Database::database);
@@ -332,22 +343,22 @@ QStringList Category::getAllDescriptions(){
         if (!query.prepare(sqlStatement)){
             Database::database.close();
             qDebug() << "ERROR: Query not prepared";
-            throw "ERROR: Query not prepared";
+            return QStringList();
         }
     } else {
         qDebug() << "ERROR: Invalid or closed (preparation)";
-        throw "ERROR: Invalid or closed (preparation)";
+        return QStringList();
     }
 
     if(Database::database.isValid() && Database::database.isOpen()){
         if(!query.exec()){
             qDebug() << query.lastError().text();
             Database::database.close();
-            throw "ERROR: Query not executed";
+            return QStringList();
         }
     } else {
         qDebug() << "ERROR: Invalid or closed (execution)";
-        throw "ERROR: Invalid or closed (execution)";
+        return QStringList();
     }
 
     QStringList categories;
@@ -360,15 +371,15 @@ QStringList Category::getAllDescriptions(){
 }
 
 /**
- * @brief Get a Category from description
+ * @brief Get a Category filtred by description
  * @param description The Categories's description
- * @return The Category filtred by description
+ * @return The Category filtred by description if was found and null if a error or the Category was not found
  */
 Category* Category::getByDescription(QString description){
     Category::_init();
     if(!Database::database.open()) {
         qDebug() << "ERROR: trying to open the database";
-        throw "ERROR: trying to open the database";
+        return NULL;
     }
 
     QSqlQuery query(Database::database);
@@ -379,11 +390,11 @@ Category* Category::getByDescription(QString description){
         if (!query.prepare(sqlStatement)){
             Database::database.close();
             qDebug() << "ERROR: Query not prepared";
-            throw "ERROR: Query not prepared";
+            return NULL;
         }
     } else {
         qDebug() << "ERROR: Invalid or closed (preparation)";
-        throw "ERROR: Invalid or closed (preparation)";
+        return NULL;
     }
 
     query.bindValue(":description", QVariant(description));
@@ -392,19 +403,22 @@ Category* Category::getByDescription(QString description){
         if(!query.exec()){
             qDebug() << query.lastError().text();
             Database::database.close();
-            throw "ERROR: Query not executed";
+            return NULL;
         }
     } else {
         qDebug() << "ERROR: Invalid or closed (execution)";
-        throw "ERROR: Invalid or closed (execution)";
+        return NULL;
     }
 
-    Category* category = new Category();
+    int _id = 0;
+    QString _description;
     while(query.next()){
-        category->setId(query.value(0).toInt());
-        category->setDescription(query.value(1).toString());
+        _id =query.value(0).toInt();
+        _description = query.value(1).toString();
     }
     Database::database.close();
 
-    return category;
+    if(_id<=0) return NULL;
+
+    return new Category(_id,_description);
 }

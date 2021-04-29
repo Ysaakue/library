@@ -4,6 +4,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls.Material 2.12
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
+import DatabaseController 1.0
 
 import "utilities"
 
@@ -95,10 +96,20 @@ Rectangle {
         interactive: true
         clip: true
         delegate: Rectangle{
+            id: row
             height: 30
             width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
             color: "white"
+
+            DatabaseController{
+                id: database_controller_row
+
+                onBookDeleted: {
+                    row.height = 0
+                    row.visible = false
+                }
+            }
 
             Text{
                 text: getName(modelData)
@@ -125,6 +136,10 @@ Rectangle {
                 buttonWidth: 24; buttonHeight: 24
                 anchors.verticalCenter: parent.verticalCenter
                 imageSource: "qrc:/pages/images/delete_black_24dp.svg"
+                button.onClicked: {
+                    if(current_model == "book")
+                        database_controller_row.destroyBook(modelData["isbn"])
+                }
             }
         }
 
