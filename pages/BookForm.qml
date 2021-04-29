@@ -1,10 +1,11 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.15
 
 import "utilities"
 
 Rectangle {
     id: page
+
     property string action: "save"
     property var databaseInstance: global_database_controller
 
@@ -100,6 +101,26 @@ Rectangle {
         }
     }
 
+    Dialog {
+        id: dialog
+        anchors.centerIn: parent.Center
+        title: ""
+        modal: true
+
+        closePolicy: Popup.NoAutoClose
+
+        onOpened: dialog_timer.running = true
+        property bool pop: false
+        Timer{
+            id: dialog_timer
+            interval: 3000
+            onTriggered: {
+                dialog.close()
+                if(dialog.pop) pageRoute.pop()
+            }
+        }
+    }
+
     Button{
         id: save
         anchors.top: grid.bottom
@@ -108,18 +129,22 @@ Rectangle {
         anchors.leftMargin: 15
         text: "Salvar"
         onClicked: {
-            if(action === "save")
-                if(databaseInstance.saveBook(isbn.text,name.text,author.text,category.currentText)){
-                    console.log("ok")
-                } else {
-                    console.log("fail")
-                }
+            if(isbn.text != "" && name.text != "" && author.text!= "")
+                if(action === "save")
+                    if(databaseInstance.saveBook(isbn.text,name.text,author.text,category.currentText)){
+                        dialog.title = "Livro salvo com sucesso"
+                        dialog.pop = true
+                    }else
+                        dialog.title = "Ocorreu um erro ao tentar salvar o livro"
+                else
+                    if(databaseInstance.updateBook(isbn.text,name.text,author.text,category.currentText)){
+                        dialog.title = "Livro editado com sucesso"
+                        dialog.pop = true
+                    }else
+                        dialog.title = "Ocorreu um erro ao tentar editar o livro"
             else
-                if(databaseInstance.updateBook(isbn.text,name.text,author.text,category.currentText)){
-                    console.log("ok")
-                } else {
-                    console.log("fail")
-                }
+                dialog.title = "preencha todos os campos"
+            dialog.open()
         }
     }
 

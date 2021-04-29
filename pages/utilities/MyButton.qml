@@ -1,3 +1,5 @@
+/* widget proveniente de colaboração com https://github.com/BruceMustache */
+
 import QtQuick 2.12
 import QtQuick.Layouts 1.12
 

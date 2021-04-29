@@ -57,7 +57,6 @@ bool DatabaseController::saveBook(QString isbn,QString name,QString author, QStr
  */
 bool DatabaseController::updateBook(QString isbn,QString name,QString author, QString category_description){
     Book* book = Book::getByIsbn(isbn);
-    qDebug() << name;
     book->setName(name);
     book->setAuthor(author);
     book->setCategory(Category::getByDescription(category_description)->getId());
